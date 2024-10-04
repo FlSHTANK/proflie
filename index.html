@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์นักศึกษา</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="video-section">
+            <video id="myVideo" autoplay loop muted>
+                <source src="ThisTime2.mp4" type="video/mp4">
+            </video>
+           
+            <audio id="backgroundMusic" autoplay loop>
+                <source src="ThisTime.mp3" type="audio/mp3">
+            </audio>    
+        </div>
+        <div class="info-section">
+            <div class="profile" id="profileBox">
+                <h1>นายณัฏฐกิตติ์ มิตรสูงเนิน</h1>
+                <p>รหัสนักศึกษา: 653450283-5</p>
+                <p>อีเมล: <a href="mailto:Mahakkapan.p@kkumail.com">Natthakit.m@kkumail.com</a></p>
+                <p>สาขาวิชา: วิทยาการคอมพิวเตอร์และสารสนเทศ</p>
+            </div>
+            <div class="AOP" id="aopBox">
+                <h2>ผลงานนักศึกษา</h2>
+                <ul>
+                    <li><a href="https://github.com/FlSHTANK/natthakit.git" target="_blank">Project (OOP)</a></li>
+                    <li><a href="https://github.com/FlSHTANK/poke2.git" target="_blank">Pokemon (Front-end)</a></li>
+                    <li><a href="https://github.com/FlSHTANK/shoping.git" target="_blank">Shopping Cart (Front-end)</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('myVideo');
+        const music = document.getElementById('backgroundMusic');
+        video.volume = 0.5; 
+        music.volume = 0; 
+
+       
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const source = audioContext.createMediaElementSource(music); 
+        const analyser = audioContext.createAnalyser();
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+        analyser.fftSize = 256;
+
+        const bufferLength = analyser.frequencyBinCount;
+        const dataArray = new Uint8Array(bufferLength);
+
+        const profileBox = document.getElementById('profileBox');
+        const aopBox = document.getElementById('aopBox');
+
+        function bounceElements() {
+            analyser.getByteFrequencyData(dataArray);
+            const averageFrequency = dataArray.reduce((a, b) => a + b) / bufferLength;
+
+            
+            const scale = 1 + (averageFrequency / 256) * 0.3;
+            const rotate = (averageFrequency / 256) * 10; 
+
+            
+            profileBox.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+            aopBox.style.transform = `scale(${scale}) rotate(${rotate}deg)`;
+
+            requestAnimationFrame(bounceElements);
+        }
+
+        bounceElements();
+    </script>
+</body>
+</html>
